@@ -24,7 +24,6 @@
   "browser_specific_settings": {
     "gecko": {
       "id": "@wikidata-sibling-nodes",
-      "strict_min_version": "57.0"
       "data_collection_permissions": {
         "required": ["none"]
       }
