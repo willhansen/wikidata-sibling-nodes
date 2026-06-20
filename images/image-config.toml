@@ -1,9 +1,9 @@
 output = "output.png"
 gap = 20
-background = "#ffffff"
-font_size = 70
+background = "#000000"
+font_size = 75
 text_outline_width = 5
-oval_outline_width = 10
+oval_outline_width = 14
 
 # Optional: explicit font path. If unset, searches for Helvetica, Arial, etc.
 # font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
@@ -18,10 +18,10 @@ file = "before.png"
 file = "after.png"
 
   [[images.ovals]]
-  x = 275
-  y = 915
-  width = 120
-  height = 50
+  x = 324
+  y = 934
+  width = 150
+  height = 120
 
   [[images.texts]]
   content = "AFTER"
