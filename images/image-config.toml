@@ -1,6 +1,7 @@
 output = "output.png"
 gap = 20
-background = "#000000"
+gap_background = "#222222"
+infill_background = "#ffffff"
 font_size = 75
 text_outline_width = 5
 oval_outline_width = 14

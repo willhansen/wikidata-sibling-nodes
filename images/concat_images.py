@@ -66,14 +66,16 @@ def build_canvas(images, gap, bg_color):
     return canvas, total_w, max_h
 
 
-def paste_images(canvas, images, gap, bg_color):
+def paste_images(canvas, images, gap, infill_color):
+    draw = ImageDraw.Draw(canvas)
     x_offset = 0
     offsets = []
     for im in images:
-        y_offset = 0
-        canvas.paste(im, (x_offset, y_offset), im)
+        draw.rectangle([x_offset, 0, x_offset + im.width, canvas.height], fill=infill_color)
+        canvas.paste(im, (x_offset, 0), im)
         offsets.append(x_offset)
         x_offset += im.width + gap
+    draw.image = None  # prevent accidental reuse
     return offsets
 
 
@@ -133,7 +135,9 @@ def main():
 
     output = cfg.get("output", "output.png")
     gap = cfg.get("gap", 0)
-    bg_color = hex_to_rgb(cfg.get("background", "#ffffff"))
+    bg = cfg.get("background", "#ffffff")
+    gap_background = hex_to_rgb(cfg.get("gap_background", bg))
+    infill_background = hex_to_rgb(cfg.get("infill_background", bg))
     font_size = cfg.get("font_size", 28)
     text_outline_width = cfg.get("text_outline_width", 2)
     oval_outline_width = cfg.get("oval_outline_width", 3)
@@ -146,8 +150,8 @@ def main():
         sys.exit(1)
 
     images = load_images(images_conf, base_dir)
-    canvas, _, _ = build_canvas(images, gap, bg_color)
-    offsets = paste_images(canvas, images, gap, bg_color)
+    canvas, _, _ = build_canvas(images, gap, gap_background)
+    offsets = paste_images(canvas, images, gap, infill_background)
 
     draw = ImageDraw.Draw(canvas)
 
