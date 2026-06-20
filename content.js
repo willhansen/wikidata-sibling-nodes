@@ -25,7 +25,7 @@
   SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
 }
 LIMIT 500`;
-    return 'https://query.wikidata.org/#' + encodeURIComponent(query);
+    return 'https://query.wikidata.org/embed.html#' + encodeURIComponent(query);
   }
 
   function extractValue(stmtView) {
