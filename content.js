@@ -6,13 +6,11 @@
   const style = document.createElement('style');
   style.textContent = `
     .${BTN_CLASS} {
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      margin: 2px 0 2px 8px;
-      padding: 1px 6px;
-      font-size: 11px;
-      line-height: 1.5;
+      display: inline-block;
+      margin: 6px 0 2px 32px;
+      padding: 2px 10px 2px 8px;
+      font-size: 13px;
+      line-height: 1.6;
       color: #3366cc;
       background: #f8f9fa;
       border: 1px solid #a2a9b1;
@@ -21,16 +19,14 @@
       white-space: nowrap;
       cursor: pointer;
       transition: background 0.15s, border-color 0.15s;
-      vertical-align: middle;
     }
     .${BTN_CLASS}:hover {
       background: #ffffff;
       border-color: #3366cc;
-      text-decoration: none;
     }
     .${BTN_CLASS}::before {
-      content: '\u25b8';
-      font-size: 10px;
+      content: '\u25b8 ';
+      font-size: 11px;
     }
   `;
   document.head.appendChild(style);
@@ -83,6 +79,7 @@
     btn.className = BTN_CLASS;
     btn.title = `Find siblings via ${pid} = ${valLabel}`;
     btn.href = buildQueryUrl(pid, qid, valLabel);
+    btn.textContent = 'siblings';
     btn.target = '_blank';
     btn.rel = 'noopener noreferrer';
 
