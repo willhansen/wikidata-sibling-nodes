@@ -16,47 +16,30 @@
     .${BTN_CLASS}:hover {
       text-decoration: underline;
     }
-    .${BTN_CLASS}::before {
-      content: '(';
-      font-size: 14px;
-    }
-    .${BTN_CLASS}::after {
-      content: ')';
-      font-size: 14px;
-    }
   `;
   document.head.appendChild(style);
 
-  function buildQueryUrl(pid, qid, label) {
-    const comment = label ? `# ${label} siblings\n` : '';
-    const query = comment + [
-      'SELECT ?item ?itemLabel ?itemDescription WHERE {',
-      `  ?item wdt:${pid} wd:${qid}.`,
-      '  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }',
-      '}',
-      'LIMIT 500',
-    ].join('\n');
+  function buildQueryUrl(pid, qid) {
+    const query = `SELECT ?item ?itemLabel ?itemDescription WHERE {
+  ?item wdt:${pid} wd:${qid}.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "[AUTO_LANGUAGE],en". }
+}
+LIMIT 500`;
     return 'https://query.wikidata.org/#' + encodeURIComponent(query);
   }
 
-  function extractValueId(stmtView) {
+  function extractValue(stmtView) {
     const valueEl = stmtView.querySelector(
       '.wikibase-snakview-value.wikibase-snakview-variation-valuesnak'
     );
     if (!valueEl) return null;
-    const link = valueEl.querySelector('a[href*="/wiki/Q"]');
-    if (!link) return null;
-    const m = link.getAttribute('href').match(/\/wiki\/(Q\d+)/);
-    return m ? m[1] : null;
-  }
-
-  function extractValueLabel(stmtView) {
-    const valueEl = stmtView.querySelector(
-      '.wikibase-snakview-value.wikibase-snakview-variation-valuesnak'
-    );
-    if (!valueEl) return '';
     const link = valueEl.querySelector('a');
-    return link ? link.textContent.trim() : valueEl.textContent.trim().split('\n')[0].trim();
+    const href = link && link.getAttribute('href');
+    const m = href && href.match(/\/wiki\/(Q\d+)/);
+    return {
+      qid: m ? m[1] : null,
+      label: link ? link.textContent.trim() : valueEl.textContent.trim().split('\n')[0].trim(),
+    };
   }
 
   function addSiblingButton(stmtView) {
@@ -67,15 +50,14 @@
     const pid = groupView.getAttribute('data-property-id');
     if (!pid) return;
 
-    const qid = extractValueId(stmtView);
-    if (!qid) return;
+    const val = extractValue(stmtView);
+    if (!val || !val.qid) return;
 
-    const valLabel = extractValueLabel(stmtView);
     const btn = document.createElement('a');
     btn.className = BTN_CLASS;
-    btn.title = `Find siblings via ${pid} = ${valLabel}`;
-    btn.href = buildQueryUrl(pid, qid, valLabel);
-    btn.textContent = 'siblings';
+    btn.title = `Find siblings via ${pid}`;
+    btn.href = buildQueryUrl(pid, val.qid);
+    btn.textContent = '(siblings)';
     btn.target = '_blank';
     btn.rel = 'noopener noreferrer';
 
@@ -85,7 +67,6 @@
     if (refsContainer) {
       refsContainer.parentNode.insertBefore(btn, refsContainer);
     } else {
-      stmtView.appendChild(document.createTextNode(' '));
       stmtView.appendChild(btn);
     }
   }
