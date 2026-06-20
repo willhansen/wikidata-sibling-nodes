@@ -92,7 +92,7 @@ def draw_texts(draw, texts_conf, x_base, y_base, image_width, font, outline_widt
         bbox = draw.textbbox((0, 0), content, font=font)
         text_w = bbox[2] - bbox[0]
         x = x_base + (image_width - text_w) // 2
-        y = y_base + 20
+        y = y_base + int(font.size * 0.3)
         draw.text((x, y), content, font=font, fill="white",
                   stroke_width=outline_width, stroke_fill="black")
 
