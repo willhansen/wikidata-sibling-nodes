@@ -1,0 +1,32 @@
+{
+  "manifest_version": 2,
+  "name": "Wikidata Sibling Nodes",
+  "version": "1.0",
+  "description": "Adds a 'Siblings' button next to each statement on Wikidata/Wikipedia to find all sibling nodes connected via the same property-value pair.",
+  "permissions": [
+    "https://www.wikidata.org/*",
+    "https://*.wikipedia.org/*",
+    "https://query.wikidata.org/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.wikidata.org/wiki/Q*",
+        "https://www.wikidata.org/wiki/Property:*",
+        "https://*.wikipedia.org/wiki/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "wikidata-sibling-nodes@example.com",
+      "strict_min_version": "57.0"
+    }
+  }
+}
