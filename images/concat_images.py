@@ -77,13 +77,29 @@ def paste_images(canvas, images, gap, bg_color):
     return offsets
 
 
-def draw_ovals(draw, ovals_conf, x_base, y_base, oval_outline_width):
+def draw_ovals(canvas, ovals_conf, x_base, y_base, oval_outline_width):
     for oval in ovals_conf:
-        x0 = x_base + oval["x"]
-        y0 = y_base + oval["y"]
-        x1 = x0 + oval["width"]
-        y1 = y0 + oval["height"]
-        draw.ellipse([x0, y0, x1, y1], outline="red", width=oval_outline_width)
+        cx = x_base + oval["x"]
+        cy = y_base + oval["y"]
+        w = oval["width"]
+        h = oval["height"]
+        r = oval_outline_width
+        scale = 4
+        pad = r + 2
+
+        tw = (w + 2 * pad) * scale
+        th = (h + 2 * pad) * scale
+        temp = Image.new("RGBA", (tw, th), (0, 0, 0, 0))
+        td = ImageDraw.Draw(temp)
+        td.ellipse(
+            [pad * scale, pad * scale, (w + pad) * scale, (h + pad) * scale],
+            outline="red", width=r * scale,
+        )
+
+        temp = temp.resize((w + 2 * pad, h + 2 * pad), Image.BILINEAR)
+        left = cx - w // 2 - pad
+        top = cy - h // 2 - pad
+        canvas.paste(temp, (left, top), temp)
 
 
 def draw_texts(draw, texts_conf, x_base, y_base, image_width, font, outline_width):
@@ -140,7 +156,7 @@ def main():
         y_base = 0
 
         entry = images_conf[i]
-        draw_ovals(draw, entry.get("ovals", []), x_base, y_base, oval_outline_width)
+        draw_ovals(canvas, entry.get("ovals", []), x_base, y_base, oval_outline_width)
         draw_texts(draw, entry.get("texts", []), x_base, y_base, im.width, font, text_outline_width)
 
     canvas.save(output)
