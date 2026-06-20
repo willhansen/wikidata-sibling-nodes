@@ -1,0 +1,38 @@
+output = "comparison.png"
+gap = 20
+background = "#ffffff"
+
+# Optional: global font path override. If unset, the script searches for
+# Helvetica, Arial, DejaVuSans-Bold, etc.
+# font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+
+[[images]]
+file = "images/before.png"
+
+  [[images.ovals]]
+  x = 50
+  y = 100
+  width = 200
+  height = 60
+  outline_width = 3
+
+  [[images.texts]]
+  x = 100
+  y = 50
+  content = "Before"
+  font_size = 32
+
+[[images]]
+file = "images/after.png"
+
+  [[images.ovals]]
+  x = 40
+  y = 80
+  width = 180
+  height = 55
+
+  [[images.texts]]
+  x = 90
+  y = 40
+  content = "After"
+  font_size = 32
