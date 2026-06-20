@@ -1,5 +1,4 @@
 import sys
-import os
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -78,27 +77,24 @@ def paste_images(canvas, images, gap, bg_color):
     return offsets
 
 
-def draw_ovals(draw, ovals_conf, x_base, y_base):
-    default_width = 3
+def draw_ovals(draw, ovals_conf, x_base, y_base, oval_outline_width):
     for oval in ovals_conf:
         x0 = x_base + oval["x"]
         y0 = y_base + oval["y"]
         x1 = x0 + oval["width"]
         y1 = y0 + oval["height"]
-        w = oval.get("outline_width", default_width)
-        draw.ellipse([x0, y0, x1, y1], outline="red", width=w)
+        draw.ellipse([x0, y0, x1, y1], outline="red", width=oval_outline_width)
 
 
-def draw_texts(draw, texts_conf, x_base, y_base, global_font_path):
+def draw_texts(draw, texts_conf, x_base, y_base, image_width, font, outline_width):
     for entry in texts_conf:
         content = entry["content"]
-        size = entry.get("font_size", 28)
-        fp = entry.get("font_path", global_font_path)
-        font = resolve_font(fp, size)
-        x = x_base + entry["x"]
-        y = y_base + entry["y"]
+        bbox = draw.textbbox((0, 0), content, font=font)
+        text_w = bbox[2] - bbox[0]
+        x = x_base + (image_width - text_w) // 2
+        y = y_base + 20
         draw.text((x, y), content, font=font, fill="white",
-                  stroke_width=2, stroke_fill="black")
+                  stroke_width=outline_width, stroke_fill="black")
 
 
 def parse_config(path):
@@ -122,8 +118,11 @@ def main():
     output = cfg.get("output", "output.png")
     gap = cfg.get("gap", 0)
     bg_color = hex_to_rgb(cfg.get("background", "#ffffff"))
-
-    global_font_path = cfg.get("font_path")
+    font_size = cfg.get("font_size", 28)
+    text_outline_width = cfg.get("text_outline_width", 2)
+    oval_outline_width = cfg.get("oval_outline_width", 3)
+    font_path = cfg.get("font_path")
+    font = resolve_font(font_path, font_size)
 
     images_conf = cfg.get("images", [])
     if not images_conf:
@@ -131,7 +130,7 @@ def main():
         sys.exit(1)
 
     images = load_images(images_conf, base_dir)
-    canvas, _, max_h = build_canvas(images, gap, bg_color)
+    canvas, _, _ = build_canvas(images, gap, bg_color)
     offsets = paste_images(canvas, images, gap, bg_color)
 
     draw = ImageDraw.Draw(canvas)
@@ -141,8 +140,8 @@ def main():
         y_base = 0
 
         entry = images_conf[i]
-        draw_ovals(draw, entry.get("ovals", []), x_base, y_base)
-        draw_texts(draw, entry.get("texts", []), x_base, y_base, global_font_path)
+        draw_ovals(draw, entry.get("ovals", []), x_base, y_base, oval_outline_width)
+        draw_texts(draw, entry.get("texts", []), x_base, y_base, im.width, font, text_outline_width)
 
     canvas.save(output)
     print(f"saved {output}")

@@ -1,19 +1,18 @@
 output = "output.png"
 gap = 20
 background = "#ffffff"
+font_size = 70
+text_outline_width = 2
+oval_outline_width = 3
 
-# Optional: global font path override. If unset, the script searches for
-# Helvetica, Arial, DejaVuSans-Bold, etc.
+# Optional: explicit font path. If unset, searches for Helvetica, Arial, etc.
 # font_path = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
 
 [[images]]
 file = "before.png"
 
   [[images.texts]]
-  x = 100
-  y = 50
   content = "BEFORE"
-  font_size = 70
 
 [[images]]
 file = "after.png"
@@ -25,16 +24,10 @@ file = "after.png"
   height = 40
 
   [[images.texts]]
-  x = 90
-  y = 40
   content = "AFTER"
-  font_size = 70
 
 [[images]]
 file = "destination.png"
 
   [[images.texts]]
-  x = 90
-  y = 40
   content = "WHERE IT\nTAKES YOU"
-  font_size = 70
