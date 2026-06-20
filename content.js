@@ -6,27 +6,19 @@
   const style = document.createElement('style');
   style.textContent = `
     .${BTN_CLASS} {
-      display: inline-block;
       margin: 6px 0 2px 32px;
-      padding: 2px 10px 2px 8px;
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 14px;
       color: #3366cc;
-      background: #f8f9fa;
-      border: 1px solid #a2a9b1;
-      border-radius: 3px;
       text-decoration: none;
       white-space: nowrap;
       cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
     }
     .${BTN_CLASS}:hover {
-      background: #ffffff;
-      border-color: #3366cc;
+      text-decoration: underline;
     }
     .${BTN_CLASS}::before {
       content: '\u25b8 ';
-      font-size: 11px;
+      font-size: 12px;
     }
   `;
   document.head.appendChild(style);
