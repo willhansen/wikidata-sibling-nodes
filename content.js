@@ -17,8 +17,12 @@
       text-decoration: underline;
     }
     .${BTN_CLASS}::before {
-      content: '\u25b8 ';
-      font-size: 12px;
+      content: '(';
+      font-size: 14px;
+    }
+    .${BTN_CLASS}::after {
+      content: ')';
+      font-size: 14px;
     }
   `;
   document.head.appendChild(style);
